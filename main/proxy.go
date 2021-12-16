@@ -22,6 +22,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strconv"
 
 	"github.com/apache/openwhisk-runtime-go/openwhisk"
 )
@@ -72,6 +73,14 @@ func main() {
 
 	// start the balls rolling
 	openwhisk.Debug("OpenWhisk ActionLoop Proxy %s: starting", openwhisk.Version)
-	ap.Start(8080)
-
+	port := os.Getenv("OW_PORT")
+	if port != "" {
+		i, err := strconv.Atoi(port)
+		if err != nil {
+			panic(err)
+		}
+		ap.Start(i)
+	} else {
+		ap.Start(8080)
+	}
 }
